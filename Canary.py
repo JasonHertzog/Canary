@@ -6,6 +6,7 @@
 import datetime as dt
 # save file
 import pickle
+import time as t
 
 
 
@@ -140,6 +141,8 @@ class Bank:
         print("Your withdraw fee is: " + str(self.withdraw_fee))
         print("Your limit is: " + str(self.limit))
 
+
+
     
 # Create clock object
 class Clock:
@@ -219,9 +222,14 @@ class Objectives:
     def print_repeatable(self):
         print("Your repeatable objectives are: " + str(self.repeatable))
 
-    def print_all(self):
-        print("Your daily objectives are: " + str(self.daily))
-        print("Your repeatable objectives are: " + str(self.repeatable))
+    def print_all(self): 
+        print("Your daily objectives are: ")
+        for objective in self.daily:
+            print(" - " + str(objective) + ": $" + str(self.daily_rewards[self.daily.index(objective)]))
+        print("Your repeatable objectives are: ")
+        for objective in self.repeatable:
+            print(" - " + str(objective) + ": $" + str(self.repeatable_rewards[self.repeatable.index(objective)]))
+
 
     def reset_daily(self):
         self.daily = []
@@ -252,6 +260,7 @@ class Objectives:
 
 # Main method
 def main():
+    quit = False
     bank = Bank()
     clock = Clock()
     objectives = Objectives()
@@ -273,6 +282,8 @@ def main():
     print("Your current balance is: " + str(bank.balance))
     # Main loop
     while True:
+        if quit == True:
+            break
         # If the current date is different from the clock.last _ccessed, reduce the balance. Reset the objectives list to defaults
         if clock.get_date() != clock.last_access:
             clock.reduce_balance(bank)
@@ -318,7 +329,8 @@ def main():
             print(clock.last_access)
         elif choice == "b":
             print(bank.balance)
-        elif choice == "quit":
+        elif choice == "quit" or choice == "5":
+            quit = True
             break
         elif choice == "3":
             print("1. Add Daily Objective")
@@ -372,6 +384,10 @@ def main():
             pickle.dump(bank, f)
             pickle.dump(clock, f)
             pickle.dump(objectives, f)
+        
+        # sleep for 1 second
+        t.sleep(3)
+
 
 
 # Run the main method.
