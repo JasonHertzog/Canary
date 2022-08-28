@@ -3,6 +3,8 @@
 # clock: keeps track of the day and decreases the balance by %0.005 every day. The clock handles the save file.
 # objectives: contains the list of possible objectives. Some objectives are daily.
 
+# TODO: FIX THE "c" HOTKEY FOR FASTER LOGGING
+
 import datetime as dt
 # save file
 import pickle
@@ -247,14 +249,17 @@ class Objectives:
         self.reset_repeatable()
 
     # Complete an objective, increasing the bank balance by an ammount associated with the objective
-    def complete_objective(self, bank, objective):
+    def complete_objective(self, bank, objective, times = 1):
         if objective in self.daily:
             bank.balance += self.daily_rewards[self.daily.index(objective)]
             self.daily.remove(objective)
         elif objective in self.repeatable:
-            bank.balance += self.repeatable_rewards[self.repeatable.index(objective)]
+            while times > 0:
+                bank.balance += self.repeatable_rewards[self.repeatable.index(objective)]
+                times -= 1
         else:
             print("ERROR: You do not have this objective.")
+        
 
 # initialize all objects
 
@@ -306,8 +311,44 @@ def main():
         if choice == "1":
             objectives.print_all()
         elif choice == "2":
+            print("1. " + objectives.get_daily()[0])
+            print("2. " + objectives.get_daily()[1])
+            print("3. " + objectives.get_daily()[2])
+            print("4. " + objectives.get_daily()[3])
+            print("5. " + objectives.get_daily()[4])
+            print("6. " + objectives.get_repeatable()[0])
+            print("7. " + objectives.get_repeatable()[1])
+            print("8. " + objectives.get_repeatable()[2])
+            print("9. " + objectives.get_repeatable()[3])
+            print("10. " + objectives.get_repeatable()[4])
+            print()
+
             objective = input("What would you like to complete? ")
-            objectives.complete_objective(bank, objective)
+            if objective == "1":
+                 objectives.complete_objective(bank, objectives.daily[0])
+            elif objective == "2":
+                objectives.complete_objective(bank, objectives.daily[1])
+            elif objective == "3":
+                objectives.complete_objective(bank, objectives.daily[2])
+            elif objective == "4":
+                objectives.complete_objective(bank, objectives.daily[3])
+            elif objective == "5":
+                objectives.complete_objective(bank, objectives.daily[4])
+            elif objective == "6":
+                objectives.complete_objective(bank, objectives.repeatable[0])
+            elif objective == "7":
+                objectives.complete_objective(bank, objectives.repeatable[1])
+            elif objective == "8":
+                objectives.complete_objective(bank, objectives.repeatable[2])
+            elif objective == "9":
+                objectives.complete_objective(bank, objectives.repeatable[3])
+            elif objective == "10":
+                objectives.complete_objective(bank, objectives.repeatable[4])
+            else:
+                print("ERROR: You do not have this objective.")
+
+
+            
             print("Your new balance is: " + str(bank.balance))
             # save
             with open('canary_save.pkl', 'wb') as f:
@@ -375,6 +416,17 @@ def main():
                 pickle.dump(bank, f)
                 pickle.dump(clock, f)
                 pickle.dump(objectives, f)
+            
+            # WIP: c stands for complete
+        elif choice.find("c") != -1:
+            # find first integer in choice
+            objective = int(choice.split(" ")[1])
+            # find second integer in string
+            times = int(choice.split(" ")[2])
+            # Clean objective and times to be integers
+            # Complete objective X times
+            objectives.complete_objective(bank, objective, times)
+            
         else:
             print("ERROR: Invalid input.")
         print("\n")
