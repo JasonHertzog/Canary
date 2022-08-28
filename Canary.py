@@ -192,7 +192,7 @@ class Clock:
 # Create objectives object that include: list of daily and repeatable objectives that reward the bank with balance
 class Objectives:
     def __init__(self):
-        self.daily = ["Floss","30-minute exercise","Brush Teeth","Productive Labor","Small Deed"]
+        self.daily = ["1. Floss","2. 30-minute exercise","3. Brush Teeth","4. Productive Labor","5. Small Deed"]
         self.repeatable = ["Study per Logged hour", "Kaggle Work per Logged hour", "Coding per Logged hour", "Zander Time per estimated hour", "Hayley Time per estimated hour"]
         # respective rewards for each objective
         self.daily_rewards = [5, 5, 1, 1, 0.5]
@@ -238,7 +238,7 @@ class Objectives:
 
    # set daily and repeatable to default values
     def set_default(self):
-        self.daily = ["Floss","30-minute exercise","Brush Teeth","Productive Labor","Small Deed"]
+        self.daily = ["1. Floss","2. 30-minute exercise","3. Brush Teeth","4. Productive Labor","5. Small Deed"]
         self.repeatable = ["Study per Logged hour", "Kaggle Work per Logged hour", "Coding per Logged hour", "Zander Time per estimated hour", "Hayley Time per estimated hour"]
 
     def reset_repeatable(self):
@@ -252,7 +252,7 @@ class Objectives:
     def complete_objective(self, bank, objective, times = 1):
         if objective in self.daily:
             bank.balance += self.daily_rewards[self.daily.index(objective)]
-            self.daily.remove(objective)
+            # PUT A FLAG HERE TO INDICATE THAT IT WAS USED ALREADY ON THIS DAY.
         elif objective in self.repeatable:
             while times > 0:
                 bank.balance += self.repeatable_rewards[self.repeatable.index(objective)]
@@ -311,11 +311,10 @@ def main():
         if choice == "1":
             objectives.print_all()
         elif choice == "2":
-            print("1. " + objectives.get_daily()[0])
-            print("2. " + objectives.get_daily()[1])
-            print("3. " + objectives.get_daily()[2])
-            print("4. " + objectives.get_daily()[3])
-            print("5. " + objectives.get_daily()[4])
+            # try to show objectives.get_daily()
+            print("Your daily objectives are: ")
+            for objective in objectives.get_daily():
+                print(str(objective) + ": $" + str(objectives.daily_rewards[objectives.daily.index(objective)]))
             print("6. " + objectives.get_repeatable()[0])
             print("7. " + objectives.get_repeatable()[1])
             print("8. " + objectives.get_repeatable()[2])
